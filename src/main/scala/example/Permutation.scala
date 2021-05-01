@@ -3,38 +3,6 @@ package example
 /** find all permutations of given list of numbers, each number can only be used once
   */
 trait Permutation {
-  // def _do(input: List[Int], prefix: List[String]): List[String] = input match {
-  //   case Nil         => prefix
-  //   case head :: Nil => prefix.map(_ + head)
-  //   case head :: next =>
-  //     for {
-  //       i <- Range(0, input.size)
-  //       ret <- {
-  //       val n = input(i)
-  //       val (l, r) = input.splitAt(i)
-  //     }
-  //     } yield ret
-  // }
-  // def getNums(i: Int, input: List[Int]): List[Int] = {
-  //   val (l, r) = input.splitAt(i)
-  //   l ::: r.tail
-  // }
-
-  // def _do(input: List[Int], prefix: List[String]): List[String] = {
-  //   input match {
-  //     case Nil         => prefix
-  //     case head :: Nil => prefix.map(_ + head)
-  //     case head :: next =>
-  //       val p = for {
-  //         (i, idx) <- input.zipWithIndex
-  //         (l, r) = input.splitAt(idx)
-  //         p = prefix.map(n => n + input(idx))
-  //       } yield {
-  //         _do(l ::: r.tail, p)
-  //       }
-  //       p.flatten
-  //   }
-  // }
 
   def run(): Unit = {
     val input =

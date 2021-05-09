@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with Island {
+object Main extends App with LongestSubString {
   run()
 }

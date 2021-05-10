@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with LongestSubString {
+object Main extends App with LongestSubSequence {
   run()
 }

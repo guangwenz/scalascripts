@@ -76,7 +76,7 @@ trait Island {
           println(
             s"failed for input \n${i.map(_.mkString(",")).mkString("\n")}, got $ret while expect $exp"
           )
-        }
+        } else println("Success")
       }
     } yield ()
   }

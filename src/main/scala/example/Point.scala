@@ -1,5 +1,7 @@
 package example
 
+/** calculate 24 using give list of numbers and + - * / as operators
+  */
 trait Point {
   def _do(input: List[Int], lastSum: Int, lastRet: String): String = {
     input match {

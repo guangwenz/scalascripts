@@ -36,9 +36,9 @@ trait NextBigNumber {
     for ((i, r) <- testCases) {
       val c = program(i)
       if (c == r) {
-        println("success")
+        println("Success")
       } else {
-        println(s"fail! result $c with input $i is not equal to expected $r")
+        println(s"Fail! result $c with input $i is not equal to expected $r")
       }
     }
   }

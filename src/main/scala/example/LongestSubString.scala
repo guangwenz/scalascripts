@@ -25,6 +25,15 @@ trait LongestSubString {
         } else data(mi)(ni) = ""
       }
     } yield ()
+    val output = data
+      .map {
+        _.collect {
+          case "" => "-"
+          case f  => f
+        }.mkString(",")
+      }
+      .mkString("\n")
+    println(output)
     result
   }
 
@@ -91,9 +100,11 @@ trait LongestSubString {
       ret = {
         solution3(a, b)
       }
-    } yield {
-      if (ret != exp)
-        println(s"FAILED for input $a and $b, expected $exp but got $ret")
-    }
+      _ = {
+        if (ret != exp)
+          println(s"FAILED for input $a and $b, expected $exp but got $ret")
+        else println("Success")
+      }
+    } yield ()
   }
 }

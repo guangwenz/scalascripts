@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with EditDistance {
+object Main extends App with NQueen {
   run()
 }

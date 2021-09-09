@@ -22,7 +22,7 @@ trait Permutation {
       if h != g && h != f && h != e && h != d && h != c && h != b && h != a
     } yield "" + a + b + c + d + e + f + g + h
 
-  /** generalized solution to permutate anything
+  /** recursive way to permutate anything
     */
   def solution2[A](input: Seq[A]): Seq[String] = {
     val f = for {
@@ -38,8 +38,30 @@ trait Permutation {
     f.flatten
   }
 
+  /** backtracking way of doing it
+    */
+  def solution3[A](input: Seq[A]): Seq[String] = {
+    def loop(
+        candidates: Seq[A],
+        currentSolution: String,
+        solution: Seq[String]
+    ): Seq[String] = candidates match {
+      case Nil => currentSolution +: solution
+      case _ =>
+        val p = for {
+          c <- candidates
+          newCandidates = candidates.filterNot(_ == c)
+        } yield {
+          loop(newCandidates, currentSolution + c.toString(), solution)
+        }
+        p.flatten
+    }
+    loop(input, "", Seq.empty)
+  }
+
   def run(): Unit = {
-    println(solution2(Seq('a', 'b', 'c', 'd')).mkString("\n"))
+    // println(solution3(Seq('a', 'b', 'c', 'd')).mkString("\n"))
+    println(solution3((0 to 9).toSeq).mkString("\n"))
   }
 
 }

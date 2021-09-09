@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with NQueen {
+object Main extends App with Permutation {
   run()
 }

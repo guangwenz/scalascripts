@@ -6,6 +6,10 @@ trait DFS {
   type G[A] = Map[A, List[A]]
 
   def dfs[A](g: G[A]) = {
+
+    /** recurisive
+      * use map as visited should make the contains check constant instead of n
+      */
     def dfs0(v: A, visited: List[A]): List[A] = {
       if (visited.contains(v)) visited
       else {

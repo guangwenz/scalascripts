@@ -6,6 +6,7 @@ package example
 trait LongestCommonSubstring {
   object Solution1 {
     def solve(in: String): Int = {
+      @annotation.tailrec
       def loop(
           data: List[Char],
           current: List[Char],

@@ -6,6 +6,25 @@ import scala.collection.immutable
   * backtracking
   */
 trait Permutation {
+  object Solution {
+
+    def combine(i: Int, in: List[Int]): Seq[List[Int]] = for {
+      m <- 0 to in.size
+      (l, r) = in.splitAt(m)
+    } yield l ::: List(i) ::: r
+
+    def permute(nums: Array[Int]): List[List[Int]] = {
+      def loop(nums: List[Int]): List[List[Int]] =
+        nums match {
+          case Nil         => Nil
+          case head :: Nil => List(List(head))
+          case head :: tail =>
+            loop(tail).flatMap(combine(head, _))
+        }
+
+      loop(nums.toList)
+    }
+  }
 
   /** brutal force
     */
@@ -61,7 +80,11 @@ trait Permutation {
 
   def run(): Unit = {
     // println(solution3(Seq('a', 'b', 'c', 'd')).mkString("\n"))
-    println(solution3((0 to 9).toSeq).mkString("\n"))
+    // println(solution3((0 to 9).toSeq).mkString("\n"))
+    println(Solution.permute((1 to 8).toArray))
+    println(Solution.permute(Array(1, 2, 3)))
+    println(Solution.permute(Array(0, 1)))
+    println(Solution.permute(Array(1)))
   }
 
 }

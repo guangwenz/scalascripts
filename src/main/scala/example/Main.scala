@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with MergeIntervals {
+object Main extends App with FindPeakElement {
   run()
 }

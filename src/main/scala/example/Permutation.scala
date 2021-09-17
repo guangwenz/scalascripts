@@ -2,12 +2,37 @@ package example
 
 import scala.collection.immutable
 
-/** find all permutations of given list of numbers, each number can only be used once
-  * backtracking
+/** Permutations
+  * Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+  *
+  * Constraints:
+  *
+  * 1 <= nums.length <= 6
+  * -10 <= nums[i] <= 10
+  * All the integers of nums are unique.
+  *
+  * https://leetcode.com/explore/interview/card/top-interview-questions-medium/109/backtracking/795/
   */
 trait Permutation {
-  object Solution {
 
+  /** better than Solution2
+    */
+  object Solution {
+    def permute(nums: Array[Int]): List[List[Int]] = {
+      nums match {
+        case Array()  => Nil
+        case Array(h) => List(List(h))
+        case _ =>
+          val p = for {
+            n <- nums
+            sub <- permute(nums.filterNot(_ == n))
+          } yield n +: sub
+          p.toList
+      }
+    }
+  }
+
+  object Solution2 {
     def combine(i: Int, in: List[Int]): Seq[List[Int]] = for {
       m <- 0 to in.size
       (l, r) = in.splitAt(m)
@@ -81,7 +106,7 @@ trait Permutation {
   def run(): Unit = {
     // println(solution3(Seq('a', 'b', 'c', 'd')).mkString("\n"))
     // println(solution3((0 to 9).toSeq).mkString("\n"))
-    println(Solution.permute((1 to 8).toArray))
+    // println(Solution.permute((1 to 8).toArray))
     println(Solution.permute(Array(1, 2, 3)))
     println(Solution.permute(Array(0, 1)))
     println(Solution.permute(Array(1)))

@@ -1,47 +1,49 @@
 package example
 
+/** Given an integer array nums, return the length of the longest strictly increasing subsequence.
+  * A subsequence is a sequence that can be derived from an array by deleting some or no elements without changing the order of the remaining elements. For example, [3,6,2,7] is a subsequence of the array [0,3,1,6,2,2,7].
+  *
+  * Constraints:
+  *
+  *   1 <= nums.length <= 2500
+  *   -104 <= nums[i] <= 104
+  *
+  * https://leetcode.com/explore/interview/card/top-interview-questions-medium/111/dynamic-programming/810/
+  */
 trait LongestIncreasingSubsequence {
 
-  /** recursive solution
+  /** dp table solution
     */
-  def solution1(input: List[Int]): Int = {
-    var globalMax = 1
-
-    def inside(data: List[Int]): Int = {
-      if (data.size == 1) 1
-      else {
-        var localMax = 1
-        for {
-          i <- Range(1, data.size)
-          j = solution1(data.take(i))
-        } yield {
-          if (data(i - 1) < data.init.last && (j + 1) > localMax) {
-            localMax = j + 1
-          }
-        }
-        if (globalMax < localMax) globalMax = localMax
-        localMax
+  object Solution {
+    def lengthOfLIS(nums: Array[Int]): Int = {
+      val dp = Array.fill(nums.size)(1)
+      for {
+        m <- 1 until nums.size
+      } yield {
+        val p = for {
+          n <- (0 until m)
+          if nums(n) < nums(m)
+        } yield dp(n) + 1
+        if (p.nonEmpty)
+          dp(m) = p.max
       }
+      dp.max
     }
-
-    inside(data = input)
-    globalMax
   }
+
   def run(): Unit = {
     val testCases = Map(
-      // List(3, 10, 2, 1, 20) -> Set(List(3, 10, 20)),
-      // List(2, 7, 4, 3, 8) -> Set(List(2, 7, 8)),
+      List(3, 10, 2, 1, 20) -> 3,
+      List(2, 7, 4, 3, 8) -> 3,
       List(2, 4, 3, 7, 4, 5) -> 4,
-      // List(3, 2) -> Set(List(3), List(2)),
-      // List(50, 3, 10, 7, 40, 80) -> Set(
-      //   List(3, 7, 40, 80),
-      //   List(3, 10, 40, 80)
-      // ),
-      List(3, 10, 7) -> 2
+      List(3, 2) -> 1,
+      List(50, 3, 10, 7, 40, 80) -> 4,
+      List(3, 10, 7) -> 2,
+      List(4, 10, 4, 3, 8, 9) -> 3
     )
     for {
       (i, exp) <- testCases
-      ret = solution1(i)
+      ret = Solution.lengthOfLIS(i.toArray)
       _ = {
         if (ret != exp)
           println(s"Failed for input $i, expected $exp but got $ret")

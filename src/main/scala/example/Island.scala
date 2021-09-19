@@ -4,9 +4,53 @@ import java.util.Random
 import scala.collection.mutable
 
 /** count the number of islands
+  *
+  * Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+  *
+  * An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+  *
+  * Constraints:
+  *
+  * m == grid.length
+  * n == grid[i].length
+  * 1 <= m, n <= 300
+  * grid[i][j] is '0' or '1'.
+  *
   * https://leetcode.com/explore/interview/card/top-interview-questions-medium/108/trees-and-graphs/792/
   */
 trait Island {
+  object Solution {
+    def numIslands(grid: Array[Array[Char]]): Int = {
+      def visit(
+          p: (Int, Int),
+          visited: collection.mutable.Map[(Int, Int), Boolean]
+      ): Unit = {
+        if (!visited.contains(p)) {
+          visited.put(p, true)
+          val (r, c) = p
+          val neibours: List[(Int, Int)] =
+            List((r - 1, c), (r, c - 1), (r + 1, c), (r, c + 1)).filter {
+              case (r, c) =>
+                r >= 0 && r < grid.length && c >= 0 && c < grid.head.length && grid(
+                  r
+                )(c) == '1' && !visited
+                  .contains((r, c))
+            }
+          if (neibours.nonEmpty)
+            neibours.foreach(n => visit(n, visited))
+        }
+      }
+
+      val visited = collection.mutable.Map.empty[(Int, Int), Boolean]
+      val p = for {
+        r <- 0 until grid.length
+        c <- 0 until grid.head.length
+        if grid(r)(c) == '1' && !visited.contains((r, c))
+        _ = visit((r, c), visited)
+      } yield (r, c)
+      p.size
+    }
+  }
 
   /** not working solution, needs to be fixed
     */
@@ -129,7 +173,8 @@ trait Island {
     for {
       (i, exp) <- testCases
       _ = {
-        val ret = Solution2.solve(i)
+        // val ret = Solution2.solve(i)
+        val ret = Solution.numIslands(i.map(_.toArray).toArray)
         if (ret != exp) {
           println(
             s"failed for input \n${i.map(_.mkString(",")).mkString("\n")}, got $ret while expect $exp"

@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with BinaryTreeInorderTraversal {
+object Main extends App with WordLadder {
   run()
 }

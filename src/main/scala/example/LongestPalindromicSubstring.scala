@@ -1,9 +1,43 @@
 package example
 
 /** longest palindromic substring
+  *
+  * Given a string s, return the longest palindromic substring in s.
+  *
+  * Constraints:
+  *
+  * 1 <= s.length <= 1000
+  * s consist of only digits and English letters.
+  *
   * https://leetcode.com/explore/interview/card/top-interview-questions-medium/103/array-and-strings/780/
   */
 trait LongestPalindromicSubstring {
+  object Solution {
+    def longestPalindrome(s: String): String = {
+      def getPStr(left: Int, right: Int): String = {
+        var (a, b) = (left - 1, right + 1)
+        var pStr = ""
+        while (a > -1 && b < s.length() && s(a) == s(b)) {
+          pStr += s(a)
+          a -= 1
+          b += 1
+        }
+        pStr.reverse + s.substring(left, right + 1) + pStr
+      }
+
+      var lastPtr = s.head.toString()
+      for {
+        c <- 1 until s.length()
+        pstr1 = if (s(c) == s(c - 1)) getPStr(c - 1, c) else ""
+        pstr2 = getPStr(c, c)
+        pstr = if (pstr1.length() > pstr2.length()) pstr1 else pstr2
+        if pstr.length() > lastPtr.length()
+      } yield {
+        lastPtr = pstr
+      }
+      lastPtr
+    }
+  }
 
   /** Expand from one or 2 repeated pairs
     * O(n^2)
@@ -75,13 +109,13 @@ trait LongestPalindromicSubstring {
   }
 
   def run() = {
-    println(Solution2.longestPalindrome("babad") == "bab")
-    println(Solution2.longestPalindrome("cbbd") == "bb")
-    println(Solution2.longestPalindrome("a") == "a")
-    println(Solution2.longestPalindrome("ac") == "a")
-    println(Solution2.longestPalindrome("abb") == "bb")
-    println(Solution2.longestPalindrome("aaaabaaa") == "aaabaaa")
-    println(Solution2.longestPalindrome("aaba") == "aba")
-    println(Solution2.longestPalindrome("abcba") == "abcba")
+    println(Solution.longestPalindrome("babad") == "bab")
+    println(Solution.longestPalindrome("cbbd") == "bb")
+    println(Solution.longestPalindrome("a") == "a")
+    println(Solution.longestPalindrome("ac") == "a")
+    println(Solution.longestPalindrome("abb") == "bb")
+    println(Solution.longestPalindrome("aaaabaaa") == "aaabaaa")
+    println(Solution.longestPalindrome("aaba") == "aba")
+    println(Solution.longestPalindrome("abcba") == "abcba")
   }
 }

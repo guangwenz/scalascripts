@@ -4,6 +4,27 @@ package example
   * https://leetcode.com/explore/interview/card/top-interview-questions-medium/103/array-and-strings/779/
   */
 trait LongestCommonSubstring {
+  object Solution {
+    def lengthOfLongestSubstring(in: String): Int = {
+      def getSub(i: Int): Int = {
+        val acc = collection.mutable.Map(in(i) -> true)
+        (i - 1 to 0 by -1).takeWhile { x =>
+          val ret = acc.contains(in(x))
+          if (!ret) acc.put(in(x), true)
+          !ret
+        }.length + 1
+      }
+      if (in.isEmpty()) 0
+      else {
+        val p = for {
+          i <- 0 until in.length
+          sub = getSub(i)
+        } yield sub
+        p.sorted(Ordering.Int.reverse).head
+      }
+    }
+  }
+
   object Solution1 {
     def solve(in: String): Int = {
       @annotation.tailrec
@@ -31,13 +52,13 @@ trait LongestCommonSubstring {
       loop(in.toList, Nil, Nil).size
     }
   }
+
   def run() = {
     val input = "abcabcbb"
-    println(Solution1.solve(" ") == 1)
-    println(Solution1.solve("abcabcbb") == 3)
-    println(Solution1.solve("bbbbbb") == 1)
-    println(Solution1.solve("pwwkew") == 3)
-
-    println(Solution1.solve("aabaab!bb") == 3)
+    println(Solution.lengthOfLongestSubstring(" ") == 1)
+    println(Solution.lengthOfLongestSubstring("abcabcbb") == 3)
+    println(Solution.lengthOfLongestSubstring("bbbbbb") == 1)
+    println(Solution.lengthOfLongestSubstring("pwwkew") == 3)
+    println(Solution.lengthOfLongestSubstring("aabaab!bb") == 3)
   }
 }

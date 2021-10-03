@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with WordLadder {
+object Main extends App with SlidingWindowMaximum {
   run()
 }

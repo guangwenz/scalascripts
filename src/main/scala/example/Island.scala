@@ -52,58 +52,6 @@ trait Island {
     }
   }
 
-  /** not working solution, needs to be fixed
-    */
-  object Solution1 {
-    def gen(rNum: Int, cNum: Int): Unit = {
-      val ret = for {
-        r <- Range(1, rNum)
-        c = Range(1, cNum).foldLeft("") { case (s, _) =>
-          val f = scala.util.Random.nextBoolean()
-          val n = if (f) 1 else 0
-          if (s.isEmpty) n.toString else s + " " + n
-        }
-      } yield c
-      println(ret.mkString("\n"))
-    }
-
-    def loop(
-        start: (Int, Int),
-        input: List[List[Int]],
-        visited: mutable.Map[(Int, Int), Boolean]
-    ): Unit = {
-      val (r, c) = start
-      visited.put(start, true)
-      val round =
-        List((r, c + 1), (r + 1, c - 1), (r + 1, c), (r + 1, c + 1))
-          .collect {
-            case (rr, rc)
-                if !visited.contains(
-                  (rr, rc)
-                ) && rr > -1 && rc > -1 && rr < input.size && rc < input.head.size && input(
-                  rr
-                )(
-                  rc
-                ) == 1 =>
-              (rr, rc)
-          }
-      round.foreach(loop(_, input, visited))
-    }
-
-    def solve(input: List[List[Int]]): Int = {
-      val visited = mutable.Map.empty[(Int, Int), Boolean]
-      val rounds = for {
-        (r, rIdx) <- input.zipWithIndex
-        (c, cIdx) <- r.zipWithIndex if c == 1 && !visited.contains((rIdx, cIdx))
-        ret = {
-          loop((rIdx, cIdx), input, visited)
-          1
-        }
-      } yield ret
-      rounds.sum
-    }
-  }
-
   /** Solution using DFS graph traversal
     */
   object Solution2 {
@@ -154,6 +102,45 @@ trait Island {
     }
   }
 
+  /** dfs with iterative
+    */
+  object Solution3 {
+    def numIslands(grid: Array[Array[Char]]): Int = {
+      def dfs(
+          start: (Int, Int),
+          visited: collection.mutable.Map[(Int, Int), Boolean]
+      ): Unit = {
+        val stack = collection.mutable.Stack(start)
+        while (stack.nonEmpty) {
+          val current = stack.pop()
+          visited.put(current, true)
+          val (x, y) = current
+          val adj = List(
+            (x - 1, y),
+            (x, y - 1),
+            (x, y + 1),
+            (x + 1, y)
+          ).collect {
+            case (x, y)
+                if x > -1 && x < grid.size && y > -1 && y < grid.head.size && !visited
+                  .contains((x, y)) && grid(x)(y) == '1' =>
+              (x, y)
+          }
+          stack.pushAll(adj)
+        }
+      }
+
+      val visited = collection.mutable.Map.empty[(Int, Int), Boolean]
+      val p = for {
+        r <- grid.indices
+        c <- grid(r).indices
+        if grid(r)(c) == '1' && !visited.contains((r, c))
+        _ = dfs((r, c), visited)
+      } yield ()
+      p.size
+    }
+  }
+
   def run(): Unit = {
 
     // Solution1.gen(20, 20)
@@ -174,7 +161,7 @@ trait Island {
       (i, exp) <- testCases
       _ = {
         // val ret = Solution2.solve(i)
-        val ret = Solution.numIslands(i.map(_.toArray).toArray)
+        val ret = Solution3.numIslands(i.map(_.toArray).toArray)
         if (ret != exp) {
           println(
             s"failed for input \n${i.map(_.mkString(",")).mkString("\n")}, got $ret while expect $exp"

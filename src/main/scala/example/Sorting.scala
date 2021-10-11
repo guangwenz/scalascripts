@@ -7,6 +7,9 @@ import scala.annotation.tailrec
   */
 trait Sorting {
 
+object HeapSort{
+  def sort(in: Array[Int]): Array[Int] = ???
+}
   /** quick sort with tail recursion
     * divide and conquer
     * pick a pivot, partion the list into 2, sort each and combine them

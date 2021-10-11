@@ -12,8 +12,34 @@ package example
   */
 
 trait CoinChange {
-
   object Solution {
+    def coinChange(coins: Array[Int], amount: Int): Int = {
+      val memo = collection.mutable.Map.empty[Int, Int]
+      def change(coins: Array[Int], amount: Int): Int = {
+        if (memo.contains(amount)) memo(amount)
+        else {
+          val ret = amount match {
+            case 0          => 0
+            case x if x < 0 => -1
+            case _ =>
+              var min = Int.MaxValue
+              val p = for {
+                c <- coins
+                sub = change(coins, amount - c)
+                if sub > -1
+              } yield {
+                if (sub + 1 < min) min = sub + 1
+              }
+              if (min == Int.MaxValue) -1 else min
+          }
+          memo.put(amount, ret)
+          ret
+        }
+      }
+      change(coins.sortBy(i => -i), amount)
+    }
+  }
+  object Solution3 {
     def coinChange(coins: Array[Int], amount: Int): Int = {
       val memo = collection.mutable.Map.empty[Int, Int]
       def loop(coins: Array[Int], amount: Int): Int =
@@ -68,14 +94,15 @@ trait CoinChange {
   }
 
   def run() = {
+    println(Solution.coinChange(Array(2, 5), 7) == 2)
     println(Solution.coinChange(Array(2, 5, 10, 1), 27) == 4)
     println(Solution.coinChange(Array(1, 3, 5), 7) == 3)
+    println(Solution.coinChange(Array(1, 2147483647), 2) == 2)
     println(Solution.coinChange(Array(1, 2, 5), 11) == 3)
     println(Solution.coinChange(Array(2), 3) == -1)
     println(Solution.coinChange(Array(1), 0) == 0)
     println(Solution.coinChange(Array(1), 1) == 1)
     println(Solution.coinChange(Array(1), 2) == 2)
     println(Solution.coinChange(Array(186, 419, 83, 408), 6249) == 20)
-    println(Solution.coinChange(Array(1, 2147483647), 2) == 2)
   }
 }

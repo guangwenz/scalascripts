@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with PalindromePartitioning {
+object Main extends App with medium.PathSumIII {
   run()
 }

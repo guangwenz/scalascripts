@@ -17,6 +17,58 @@ package example
 trait RemoveInvalidParentheses {
   object Solution {
     def removeInvalidParentheses(s: String): List[String] = {
+      val invalidMemo =
+        collection.mutable.Map.empty[(List[Char], List[Char]), List[String]]
+      val pMemo = collection.mutable.Map.empty[List[Char], List[Char]]
+      def invalidOnes(s: List[Char]): List[Char] = {
+        if (pMemo.contains(s)) pMemo(s)
+        else {
+          val ret = s.foldLeft(List.empty[Char]) { case (s, c) =>
+            c match {
+              case '(' => c +: s
+              case ')' => if (s.headOption.contains('(')) s.tail else c +: s
+              case _   => s
+            }
+          }
+          pMemo.put(s, ret)
+          ret
+        }
+      }
+      def removeInvalid(s: List[Char], invalid: List[Char]): List[String] = {
+        if (invalidMemo.contains((s, invalid))) invalidMemo((s, invalid))
+        else {
+          val ret =
+            if (s.isEmpty) List("")
+            else
+              invalid match {
+                case Nil =>
+                  if (invalidOnes(s).isEmpty) List(s.mkString)
+                  else List.empty[String]
+                case head :: tail =>
+                  // println(
+                  //   s"removing invalid from ${s.mkString} for invalid ${invalid.mkString}"
+                  // )
+                  val p = for {
+                    i <- s.indices
+                    c = s(i)
+                    if c == head
+                    (l, r) = s.splitAt(i)
+                    ret = removeInvalid(l ++ r.tail, tail)
+                    if ret.nonEmpty
+                  } yield ret
+                  p.toList.flatten.distinct
+              }
+          invalidMemo.put((s, invalid), ret)
+          ret
+        }
+      }
+
+      val in = s.toList
+      removeInvalid(in, invalidOnes(in))
+    }
+  }
+  object Solution2 {
+    def removeInvalidParentheses(s: String): List[String] = {
       def getInvalidParentheses(s: String): String =
         s.foldLeft(List.empty[Char]) { case (s, ch) =>
           ch match {
@@ -67,7 +119,7 @@ trait RemoveInvalidParentheses {
     println(
       Solution
         .removeInvalidParentheses("(a)())()")
-        .equals(List("(a())()", "(a)()()"))
+        .sameElements(List("(a())()", "(a)()()"))
     )
     println(
       Solution
@@ -77,7 +129,7 @@ trait RemoveInvalidParentheses {
     println(
       Solution
         .removeInvalidParentheses("((()((s((((()")
-      // .equals(List(""))
+        .equals(List("()s()", "()(s)", "(()s)"))
     )
   }
 }

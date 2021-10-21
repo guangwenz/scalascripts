@@ -1,4 +1,4 @@
-package example
+package easy
 
 /** House Robber
   *
@@ -11,10 +11,27 @@ package example
   * 1 <= nums.length <= 100
   * 0 <= nums[i] <= 400
   *
+  * https://leetcode.com/problems/house-robber/
   * https://leetcode.com/explore/interview/card/top-interview-questions-easy/97/dynamic-programming/576/
   */
 trait HouseRobber {
   object Solution {
+    def rob(nums: Array[Int]): Int = {
+      nums match {
+        case Array(h)    => h
+        case Array(h, t) => math.max(h, t)
+        case Array(h, t, tail @ _*) =>
+          var (n1, n2) = (h, math.max(h, t))
+          (2 until nums.length).foreach { i =>
+            val t = n1
+            n1 = n2
+            n2 = math.max(n1, t + nums(i))
+          }
+          n2
+      }
+    }
+  }
+  object Solution2 {
     def rob(nums: Array[Int]): Int = {
       nums match {
         case Array(a)    => a
@@ -36,6 +53,5 @@ trait HouseRobber {
   def run() = {
     println(Solution.rob(Array(1, 2, 3, 1)) == 4)
     println(Solution.rob(Array(2, 7, 9, 3, 1)) == 12)
-    println(Solution.rob(Array(2, 1, 1, 2)) == 4)
   }
 }

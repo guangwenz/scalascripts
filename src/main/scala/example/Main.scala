@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with medium.RemoveNthNodeFromEndofList {
+object Main extends App with easy.ValidAnagram {
   run()
 }

@@ -1,5 +1,5 @@
 package example
 
-object Main extends App with easy.MaximumDepthofBinaryTree {
+object Main extends App with medium.LetterCasePermutation {
   run()
 }
